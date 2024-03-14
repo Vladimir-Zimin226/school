@@ -1,81 +1,72 @@
 package ru.hogwarts.school.service;
 
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
-import ru.hogwarts.school.model.Student;
-
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+@SpringBootTest
 public class StudentServiceImplTest {
 
-    // Create instance of StudentServiceImpl
-    private StudentServiceImpl studentService = new StudentServiceImpl();
+    @Mock
+    private StudentRepository studentRepository;
+
+    @InjectMocks
+    private StudentServiceImpl studentService;
+
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void testCreateStudent() {
-        Student student = new Student(null, "Alice", 20);
-        Student createdStudent = studentService.createStudent(student);
+        Student student = new Student();
+        when(studentRepository.save(any(Student.class))).thenReturn(student);
 
-        assertNotNull(createdStudent);
-        assertNotNull(createdStudent.getId());
-        assertEquals(student.getName(), createdStudent.getName());
-        assertEquals(student.getAge(), createdStudent.getAge());
+        assertEquals(student, studentService.createStudent(new Student()));
     }
 
     @Test
     public void testFindStudent() {
-        Student student = new Student(null, "Bob", 25);
-        Student createdStudent = studentService.createStudent(student);
+        Student student = new Student();
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
 
-        Long studentId = createdStudent.getId();
-
-        Student foundStudent = studentService.findStudent(studentId);
-
-        assertNotNull(foundStudent);
-        assertEquals(createdStudent, foundStudent);
+        assertEquals(student, studentService.findStudent(1L));
     }
 
     @Test
     public void testEditStudent() {
-        Student student = new Student(null, "Charlie", 30);
-        Student createdStudent = studentService.createStudent(student);
+        Student student = new Student();
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+        when(studentRepository.save(any(Student.class))).thenReturn(student);
 
-        createdStudent.setAge(35);
-        Student editedStudent = studentService.editStudent(createdStudent);
-
-        assertEquals(35, editedStudent.getAge());
+        assertEquals(student, studentService.editStudent(1L, new Student()));
     }
 
     @Test
     public void testDeleteStudent() {
-        Student student = new Student(null, "David", 22);
-        Student createdStudent = studentService.createStudent(student);
+        Student student = new Student();
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+        doNothing().when(studentRepository).deleteById(1L);
 
-        Long studentId = createdStudent.getId();
-
-        Student deletedStudent = studentService.deleteStudent(studentId);
-
-        assertNotNull(deletedStudent);
-        assertEquals(createdStudent, deletedStudent);
-
-        Student studentNotFound = studentService.findStudent(studentId);
-        assertNull(studentNotFound);
+        studentService.deleteStudent(1L);
     }
 
     @Test
-    public void testAgeFilter() {
-        Student student1 = new Student(null, "Eve", 20);
-        Student student2 = new Student(null, "Frank", 25);
-        Student student3 = new Student(null, "Grace", 20);
-        studentService.createStudent(student1);
-        studentService.createStudent(student2);
-        studentService.createStudent(student3);
+    public void testGetAllStudents() {
+        List<Student> students = Arrays.asList(new Student(), new Student());
+        when(studentRepository.findAll()).thenReturn(students);
 
-        List<Student> age20Students = studentService.ageFilter(20);
-        assertEquals(2, age20Students.size());
-
-        List<Student> age25Students = studentService.ageFilter(25);
-        assertEquals(1, age25Students.size());
+        assertEquals(students, studentService.getAllStudents());
     }
 }

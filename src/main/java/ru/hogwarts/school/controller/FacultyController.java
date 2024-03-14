@@ -21,46 +21,29 @@ public class FacultyController {
         this.facultyService = facultyService;
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Faculty> getFacultyInfo(@PathVariable Long id) {
+    @GetMapping
+    public Collection<Faculty> getAllFaculties() {
+        return facultyService.getAllFaculties();
+    }
 
-        Faculty faculty = facultyService.findFaculty(id);
-        if (faculty == null) {
-            ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(faculty);
+    @GetMapping("{id}")
+    public Faculty getFacultyInfo(@PathVariable Long id) {
+        return facultyService.findFaculty(id);
     }
 
     @PostMapping
-    public Faculty createFaculty(@RequestBody Faculty faculty) {
-        return facultyService.createFaculty(faculty);
+    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
+        facultyService.createFaculty(faculty);
+        return new ResponseEntity<>(faculty, HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<Faculty> editeFaculty(@RequestBody Faculty faculty) {
-        Faculty foundFaculty = facultyService.editFaculty(faculty);
-        if (foundFaculty == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.ok(foundFaculty);
+    @PutMapping("{id}")
+    public Faculty editeFaculty(@RequestBody Faculty faculty, @PathVariable Long id) {
+        return facultyService.editFaculty(faculty, id);
     }
 
     @DeleteMapping("{id}")
-    public Faculty deleteFaculty(@PathVariable Long id) {
-
-        return facultyService.deleteFaculty(id);
-    }
-
-    @GetMapping
-    public ResponseEntity<Collection> getAllFaculties() {
-        return ResponseEntity.ok(facultyService.getAllFaculties());
-    }
-
-    @GetMapping("/colorFilter")
-    public ResponseEntity<Collection<Faculty>> getFacultyByColor(@RequestParam(required = false) String color) {
-        if (color != null && !color.isBlank()) {
-            return ResponseEntity.ok(facultyService.colorFilter(color));
-        }
-        return ResponseEntity.ok(Collections.emptyList());
+    public void deleteFaculty(@PathVariable Long id) {
+        facultyService.deleteFaculty(id);
     }
 }

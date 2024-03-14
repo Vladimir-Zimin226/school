@@ -20,47 +20,30 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Student> getStudentInfo(@PathVariable Long id) {
+    @GetMapping
+    public Collection<Student> getAllStudents() {
+        return studentService.getAllStudents();
+    }
 
-        Student student = studentService.findStudent(id);
-        if (student == null) {
-            ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(student);
+    @GetMapping("{id}")
+    public Student getStudentInfo(@PathVariable Long id) {
+        return studentService.findStudent(id);
     }
 
     @PostMapping
-    public Student createStudent(@RequestBody Student student) {
-        return studentService.createStudent(student);
+    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
+        studentService.createStudent(student);
+        return new ResponseEntity<>(student, HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<Student> editeStudent(@RequestBody Student student) {
-        Student foundStudent = studentService.editStudent(student);
-        if (foundStudent == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.ok(foundStudent);
+    @PutMapping("{id}")
+    public Student editeStudent(@RequestBody Student student, @PathVariable Long id) {
+        return studentService.editStudent(id, student);
     }
 
     @DeleteMapping("{id}")
-    public Student deleteStudent(@PathVariable Long id) {
-
-        return studentService.deleteStudent(id);
-    }
-
-    @GetMapping
-    public ResponseEntity<Collection> getAllStudents() {
-        return ResponseEntity.ok(studentService.getAllStudents());
-    }
-
-    @GetMapping("/ageFilter")
-    public ResponseEntity<Collection<Student>> getStudentByAge(@RequestParam(required = false) Integer age) {
-        if (age > 0){
-            return ResponseEntity.ok(studentService.ageFilter(age));
-        }
-        return ResponseEntity.ok(Collections.emptyList());
+    public void deleteStudent(@PathVariable Long id) {
+        studentService.deleteStudent(id);
     }
 
 }

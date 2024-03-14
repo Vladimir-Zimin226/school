@@ -11,11 +11,10 @@ public interface StudentService {
 
     public Student findStudent(long id);
 
-    public Student editStudent(Student student);
+    Student editStudent(Long id, Student student);
 
-    public Student deleteStudent(long id);
+    public void deleteStudent(long id);
 
     public Collection<Student> getAllStudents();
 
-    List<Student> ageFilter(int age);
 }
