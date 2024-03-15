@@ -17,4 +17,13 @@ public interface StudentService {
 
     public Collection<Student> getAllStudents();
 
+    Student findByName(String name);
+
+    Collection<Student> findByAge(Long age);
+
+    Collection<Student> findBySymbol(String part);
+
+    Collection<Student> findByNameAndAge(String name, Long age);
+
+    Collection<Student> findByAgeInBetween(Long minAge, Long maxAge);
 }

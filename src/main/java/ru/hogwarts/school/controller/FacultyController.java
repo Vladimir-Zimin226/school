@@ -46,4 +46,14 @@ public class FacultyController {
     public void deleteFaculty(@PathVariable Long id) {
         facultyService.deleteFaculty(id);
     }
+
+    @GetMapping("/filter/{color}")
+    public List<Faculty> getFaculties(@PathVariable String color) {
+        return facultyService.getFacultiesByColor(color);
+    }
+
+    @GetMapping("/filter")
+    public List<Faculty> getFacultiesByNameOrColor(@RequestParam(required = false) String name, @RequestParam(required = false) String color) {
+        return facultyService.findByNameContainingIgnoreCaseOrColorContainingIgnoreCase(name, color);
+    }
 }

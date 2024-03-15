@@ -42,4 +42,30 @@ public class StudentServiceImpl implements StudentService {
     public Collection<Student> getAllStudents() {
         return studentRepository.findAll();
     }
+
+    @Override
+    public Student findByName(String name) {
+        return studentRepository.findByNameIgnoreCase(name);
+    }
+
+    @Override
+    public Collection<Student> findByAge(Long age) {
+        return studentRepository.findByAge(age);
+    }
+
+    @Override
+    public Collection<Student> findBySymbol(String part) {
+        return studentRepository.findAllByNameContainsIgnoreCase(part);
+    }
+
+    @Override
+    public Collection<Student> findByNameAndAge(String name, Long age) {
+        return studentRepository.findStudentsByNameIgnoreCaseAndAge(name, age);
+    }
+
+    @Override
+    public Collection<Student> findByAgeInBetween(Long minAge, Long maxAge) {
+        return studentRepository.findStudentsByAgeBetween(minAge, maxAge);
+    }
+
 }
