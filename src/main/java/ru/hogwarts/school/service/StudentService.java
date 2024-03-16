@@ -17,7 +17,7 @@ public interface StudentService {
 
     public Collection<Student> getAllStudents();
 
-    Student findByName(String name);
+    Collection<Student> findByName(String name);
 
     Collection<Student> findByAge(Long age);
 

@@ -20,12 +20,12 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-   /* @GetMapping
+    @GetMapping("/students")
     public Collection<Student> getAllStudents() {
         return studentService.getAllStudents();
-    }*/
+    }
 
-    @GetMapping("{id}")
+    @GetMapping("/students/{id}")
     public Student getStudentInfo(@PathVariable Long id) {
         return studentService.findStudent(id);
     }
@@ -65,5 +65,4 @@ public class StudentController {
         }
         return ResponseEntity.ok(studentService.getAllStudents());
     }
-
 }

@@ -44,7 +44,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student findByName(String name) {
+    public Collection<Student> findByName(String name) {
         return studentRepository.findByNameIgnoreCase(name);
     }
 

@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-    Student findByNameIgnoreCase(String name);
+    Collection<Student> findByNameIgnoreCase(String name);
 
     Collection<Student> findByAge(Long age);
 
