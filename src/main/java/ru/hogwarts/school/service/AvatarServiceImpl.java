@@ -27,17 +27,11 @@ public class AvatarServiceImpl implements AvatarService {
 
     @Value("${path.to.avatars.folder}")
     private String avatarsDir;
-
-    private final StudentServiceImpl studentService;
-    private final AvatarServiceImpl avatarServiceImpl;
     private final AvatarRepository avatarRepository;
     private final StudentRepository studentRepository;
 
-    public AvatarServiceImpl(StudentServiceImpl studentService, AvatarServiceImpl avatarServiceImpl,
-                             AvatarRepository avatarRepository,
+    public AvatarServiceImpl(AvatarRepository avatarRepository,
                              StudentRepository studentRepository) {
-        this.studentService = studentService;
-        this.avatarServiceImpl = avatarServiceImpl;
         this.avatarRepository = avatarRepository;
         this.studentRepository = studentRepository;
     }

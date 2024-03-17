@@ -11,10 +11,8 @@ public class Avatar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String filePath;
     private Long fileSize;
-
     private String mediaType;
 
     @Lob
