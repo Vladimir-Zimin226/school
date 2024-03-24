@@ -4,6 +4,7 @@ package ru.hogwarts.school.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentServiceImpl;
 import java.util.Collection;
@@ -23,20 +24,28 @@ public class StudentController {
         return studentService.getAllStudents();
     }
 
-    @GetMapping("/students/{id}")
-    public Student getStudentInfo(@PathVariable Long id) {
-        return studentService.findStudent(id);
+    @GetMapping("{id}")
+    public ResponseEntity<Student> getStudentInfo(@PathVariable Long id) {
+        Student student = studentService.findStudent(id);
+        if (student == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(student);
     }
 
     @PostMapping
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        studentService.createStudent(student);
-        return new ResponseEntity<>(student, HttpStatus.CREATED);
+        Student savedStudent = studentService.createStudent(student);
+        return new ResponseEntity<>(savedStudent, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public Student editeStudent(@RequestBody Student student, @PathVariable Long id) {
-        return studentService.editStudent(id, student);
+    public ResponseEntity<Student> editeStudent(@RequestBody Student student, @PathVariable Long id) {
+        Student foundStudent = studentService.editStudent(id, student);
+        if (foundStudent == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok(foundStudent);
     }
 
     @DeleteMapping("{id}")
@@ -62,5 +71,11 @@ public class StudentController {
             return ResponseEntity.ok(studentService.findByAgeInBetween(minAge, maxAge));
         }
         return ResponseEntity.ok(studentService.getAllStudents());
+    }
+
+    @GetMapping("/{id}/faculties")
+    public Faculty getFacultyByStudentId(@RequestParam(required = false) Long studentId) {
+        return studentService.getFacultyByStudentId(studentId);
+
     }
 }

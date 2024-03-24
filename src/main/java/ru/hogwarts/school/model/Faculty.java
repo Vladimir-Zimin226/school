@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -17,7 +18,7 @@ public class Faculty {
 
     @JsonIgnore
     @OneToMany(mappedBy = "faculty")
-    private Collection<Student> students;
+    private List<Student> students;
 
     public Faculty() {
     }
@@ -48,7 +49,7 @@ public class Faculty {
         return color;
     }
 
-    public Collection<Student> getStudents() {
+    public List<Student> getStudents() {
         return students;
     }
 

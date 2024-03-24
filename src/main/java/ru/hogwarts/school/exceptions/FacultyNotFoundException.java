@@ -12,4 +12,7 @@ public class FacultyNotFoundException extends RuntimeException {
     public FacultyNotFoundException() {
         super();
     }
+
+    public FacultyNotFoundException(String s) {
+    }
 }
