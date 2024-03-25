@@ -2,6 +2,7 @@ package ru.hogwarts.school;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,11 @@ class FacultyControllerTestRT {
         List<Faculty> facultyList = List.of(faculty, faculty2);
 
         savedFaculties = facultyRepository.saveAll(facultyList);
+    }
+
+    @AfterEach
+    void tearUp() {
+        facultyRepository.deleteAll();
     }
 
     @Test

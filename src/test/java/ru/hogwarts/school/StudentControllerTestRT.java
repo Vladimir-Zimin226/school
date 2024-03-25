@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.json.JSONException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -18,6 +19,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -49,6 +51,11 @@ class StudentControllerTestRT {
         List<Student> studentList = List.of(student, student2);
 
         savedStudents = studentRepository.saveAll(studentList);
+    }
+
+    @AfterEach
+    void tearUp() {
+        studentRepository.deleteAll();
     }
 
     @Test
@@ -105,10 +112,13 @@ class StudentControllerTestRT {
         Student student = new Student(15L, "Draco", 16);
         String expected = mapper.writeValueAsString(student);
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/student", student, String.class);
+        ResponseEntity<Student> response = restTemplate.postForEntity("/student", student, Student.class);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        JSONAssert.assertEquals(expected, response.getBody(), false);
+        Optional<Student> actual = studentRepository.findById(response.getBody().getId());
+
+        Assertions.assertThat(actual.get().getName()).isEqualTo("Draco");
+        Assertions.assertThat(actual.get().getAge()).isEqualTo(16);
     }
 
     @Test

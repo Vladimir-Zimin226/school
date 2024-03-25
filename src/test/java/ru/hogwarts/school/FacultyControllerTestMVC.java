@@ -66,6 +66,7 @@ public class FacultyControllerTestMVC {
         when(facultyRepository.save(any(Faculty.class))).thenReturn(faculty);
         when(facultyRepository.findById(eq(id))).thenReturn(Optional.of(faculty));
         when(facultyRepository.findByColorIgnoreCase(eq(color))).thenReturn(List.of(faculty));
+        when(facultyRepository.findByNameContainingIgnoreCaseOrColorContainingIgnoreCase(eq(name), eq(color))).thenReturn(List.of(faculty));
 
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -79,7 +80,7 @@ public class FacultyControllerTestMVC {
                 .andExpect(jsonPath("$.color").value(color));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/faculty")
+                        .put("/faculty/" + id)
                         .content(facultyObject.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -89,7 +90,7 @@ public class FacultyControllerTestMVC {
                 .andExpect(jsonPath("$.color").value(color));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/faculty" + id)
+                        .get("/faculty/" + id)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
@@ -97,7 +98,8 @@ public class FacultyControllerTestMVC {
                 .andExpect(jsonPath("$.color").value(color));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/faculty/filter" + color)
+                        .get("/faculty/filter")
+                        .param("Griffindor", name)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(id))
