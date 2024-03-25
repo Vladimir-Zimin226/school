@@ -66,7 +66,7 @@ public class FacultyControllerTestMVC {
         when(facultyRepository.save(any(Faculty.class))).thenReturn(faculty);
         when(facultyRepository.findById(eq(id))).thenReturn(Optional.of(faculty));
         when(facultyRepository.findByColorIgnoreCase(eq(color))).thenReturn(List.of(faculty));
-        when(facultyRepository.findByNameContainingIgnoreCaseOrColorContainingIgnoreCase(eq(name), eq(color))).thenReturn(List.of(faculty));
+        when(facultyRepository.findByNameContainingIgnoreCaseOrColorContainingIgnoreCase(eq(name), any())).thenReturn(List.of(faculty));
 
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -99,7 +99,7 @@ public class FacultyControllerTestMVC {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/faculty/filter")
-                        .param("Griffindor", name)
+                        .param("name", "Griffindor")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(id))
@@ -107,7 +107,7 @@ public class FacultyControllerTestMVC {
                 .andExpect(jsonPath("$[0].color").value(color));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/faculty" + id)
+                        .delete("/faculty/" + id)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
